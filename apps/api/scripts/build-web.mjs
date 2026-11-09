@@ -9,7 +9,7 @@ const result = spawnSync('npm', ['run', 'build', '-w', '@ricoz/web'], {
   cwd: root,
   env: {
     ...process.env,
-    API_PROXY_URL: process.env.API_PROXY_URL || 'http://127.0.0.1:4000',
+    API_PROXY_URL: 'http://127.0.0.1:4000',
     NEXT_PUBLIC_API_URL: '',
     NODE_OPTIONS: process.env.NODE_OPTIONS || '--max-old-space-size=2048',
   },

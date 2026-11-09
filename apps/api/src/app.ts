@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -14,12 +14,13 @@ import { inquiryRouter } from './modules/inquiries/inquiry.routes';
 import { adminRouter } from './modules/admin/admin.routes';
 import { dashboardRouter } from './modules/dashboard/dashboard.routes';
 
-export function createApp(env: Env) {
+export function createApp(env: Env, options?: { website?: (req: Request, res: Response) => void }) {
   const app = express();
   app.disable('x-powered-by');
   app.locals.env = env;
-  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+  app.use('/api', helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(
+    '/api',
     cors({
       origin: env.webOrigin,
       credentials: true,
@@ -27,18 +28,20 @@ export function createApp(env: Env) {
       allowedHeaders: ['Content-Type', 'X-PracticeBridge-Request'],
     }),
   );
-  app.use(express.json({ limit: '1mb' }));
+  app.use('/api', express.json({ limit: '1mb' }));
   app.use(cookieParser());
-  app.use(requireCsrf);
+  app.use('/api', requireCsrf);
 
   app.get('/api/health', (_req, res) => {
     const connected = mongoose.connection.readyState === 1;
     res.json({ data: { status: 'ok', database: connected ? 'connected' : 'disconnected', service: 'practicebridge-api' } });
   });
 
-  app.get('/', (_req, res) => {
-    res.json({ data: { service: 'practicebridge-api', health: '/api/health' } });
-  });
+  if (!options?.website) {
+    app.get('/', (_req, res) => {
+      res.json({ data: { service: 'practicebridge-api', health: '/api/health' } });
+    });
+  }
 
   app.use('/api/auth', authRouter);
   app.use('/api/users', userRouter);
@@ -52,6 +55,7 @@ export function createApp(env: Env) {
     res.status(404).json({ error: { code: 'NOT_FOUND', message: 'That API endpoint does not exist.' } });
   });
 
+  if (options?.website) app.use(options.website);
   app.use(errorHandler);
   return app;
 }

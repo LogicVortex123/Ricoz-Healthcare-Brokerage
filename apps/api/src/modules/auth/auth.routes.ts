@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 import { asyncHandler } from '../../utils/async';
 import { HttpError } from '../../utils/errors';
-import { hashPassword, verifyPassword } from '../../utils/password';
+import { hashPassword, passwordNeedsRefresh, verifyPassword } from '../../utils/password';
 import { SESSION_COOKIE, sessionCookieOptions, signSession, verifySession } from '../../utils/jwt';
 import { validateBody } from '../../middleware/validate';
 import { getEnv, requireAuth } from '../../middleware/auth';
@@ -81,8 +81,17 @@ authRouter.post(
     }
     const token = signSession(String(user._id), user.role, getEnv(req));
     res.cookie(SESSION_COOKIE, token, sessionCookieOptions(getEnv(req)));
-    await recordAudit({ actorId: String(user._id), action: 'LOGIN', entityType: 'user', entityId: String(user._id) });
     res.json({ data: { user: publicUser(user) } });
+    const storedHash = user.passwordHash;
+    void (async () => {
+      if (storedHash && passwordNeedsRefresh(storedHash)) {
+        await User.updateOne({ _id: user._id }, { passwordHash: await hashPassword(password) });
+      }
+      await recordAudit({ actorId: String(user._id), action: 'LOGIN', entityType: 'user', entityId: String(user._id) });
+    })().catch((error: unknown) => {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error('[practicebridge] Login follow-up failed.', message);
+    });
   }),
 );
 
