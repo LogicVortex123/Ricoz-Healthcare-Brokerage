@@ -44,7 +44,10 @@ export function loadEnv(): Env {
     port,
     mongodbUri,
     jwtSecret,
-    webOrigin: process.env.WEB_ORIGIN?.trim() || 'http://localhost:3000',
+    webOrigin:
+      (process.env.RENDER === 'true' && process.env.RENDER_EXTERNAL_URL?.trim()) ||
+      process.env.WEB_ORIGIN?.trim() ||
+      'http://localhost:3000',
     cookieSecure: nodeEnv === 'production',
   };
 }

@@ -80,3 +80,5 @@ Set these environment variables before building:
 - Leave `NEXT_PUBLIC_API_URL` empty so the browser stays on the Vercel domain and Next.js proxies `/api` to the Express server
 
 The API keeps its own host because it is an Express process with a MongoDB connection. Set `WEB_ORIGIN` on the API to the Vercel site URL, and set `MONGODB_URI` and `JWT_SECRET` only on the API host. Do not put the database connection string in the web project.
+
+The Render service at `https://ricoz-healthcare-brokerage.onrender.com` also serves the website. Its build command must be `npm install && npm run build -w @ricoz/api` and its start command must be `npm run start -w @ricoz/api`. Redeploy that service after pulling the latest `main` commit. On Render, the public site and the API share one address, and `/api` is handled by Express.
