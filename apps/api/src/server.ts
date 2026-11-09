@@ -1,4 +1,5 @@
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
+import { existsSync } from 'fs';
 import path from 'path';
 import { createApp } from './app';
 import { connectDb, databaseErrorMessage } from './config/db';
@@ -6,20 +7,61 @@ import { loadEnv } from './config/env';
 
 const onRender = process.env.RENDER === 'true';
 const publicPort = onRender ? process.env.PORT || '10000' : '';
-if (onRender) process.env.PORT = '4000';
+const apiPort = publicPort === '4000' ? '4001' : '4000';
+if (onRender) process.env.PORT = apiPort;
+
+function websitePaths() {
+  const webDir = path.resolve(__dirname, '../../web');
+  const root = path.resolve(__dirname, '../../..');
+  const candidates = [
+    path.join(webDir, 'node_modules', 'next', 'dist', 'bin', 'next'),
+    path.join(root, 'node_modules', 'next', 'dist', 'bin', 'next'),
+  ];
+  const nextBin = candidates.find((candidate) => existsSync(candidate));
+  return { webDir, root, nextBin };
+}
+
+function ensureWebsiteBuild(root: string, webDir: string) {
+  if (existsSync(path.join(webDir, '.next', 'BUILD_ID'))) return;
+  console.log('[practicebridge] Website build is missing. Building it before startup.');
+  const result = spawnSync('npm', ['run', 'build', '-w', '@ricoz/web'], {
+    cwd: root,
+    env: {
+      ...process.env,
+      API_PROXY_URL: `http://127.0.0.1:${apiPort}`,
+      NEXT_PUBLIC_API_URL: '',
+      NODE_ENV: 'production',
+    },
+    stdio: 'inherit',
+    shell: true,
+  });
+  if (result.status !== 0 || !existsSync(path.join(webDir, '.next', 'BUILD_ID'))) {
+    console.error('[practicebridge] Website build failed, so the site cannot start.');
+    process.exit(result.status || 1);
+  }
+}
 
 function startWebsite() {
-  const webDir = path.resolve(__dirname, '../../web');
-  const nextBin = path.resolve(__dirname, '../../../node_modules/next/dist/bin/next');
-  const website = spawn(process.execPath, [nextBin, 'start', '-H', '0.0.0.0', '-p', publicPort], {
+  const { webDir, root, nextBin } = websitePaths();
+  ensureWebsiteBuild(root, webDir);
+  if (!nextBin) {
+    console.error('[practicebridge] Could not find the Next.js program in node_modules.');
+    process.exit(1);
+  }
+  console.log(`[practicebridge] Starting website on port ${publicPort} with ${nextBin}`);
+  const website = spawn(process.execPath, [nextBin, 'start', '--hostname', '0.0.0.0', '--port', publicPort], {
     cwd: webDir,
     env: {
       ...process.env,
       PORT: publicPort,
-      API_PROXY_URL: 'http://127.0.0.1:4000',
+      API_PROXY_URL: `http://127.0.0.1:${apiPort}`,
       NODE_ENV: 'production',
     },
     stdio: 'inherit',
+  });
+  website.on('error', (error) => {
+    console.error(`[practicebridge] Website failed to start. ${error.message}`);
+    process.exit(1);
   });
   website.on('exit', (code) => {
     console.error(`[practicebridge] Website stopped (${code ?? 'unknown'}).`);
