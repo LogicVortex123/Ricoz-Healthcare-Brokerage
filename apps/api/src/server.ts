@@ -6,7 +6,7 @@ import { createApp } from './app';
 import { connectDb, databaseErrorMessage } from './config/db';
 import { loadEnv } from './config/env';
 
-const require = createRequire(__filename);
+const nodeRequire = createRequire(__filename);
 const onRender = process.env.RENDER === 'true';
 
 type NextServer = {
@@ -29,7 +29,7 @@ function loadNext(webDir: string): NextFactory {
   if (!nextPackage) {
     throw new Error('Could not find the Next.js program in node_modules.');
   }
-  return require(nextPackage) as NextFactory;
+  return nodeRequire(nextPackage) as NextFactory;
 }
 
 async function main() {
