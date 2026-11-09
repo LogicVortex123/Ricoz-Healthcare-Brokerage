@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-source), "Segoe UI", sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --color-navy-950: #07111c;
+  --color-navy-900: #10233a;
+  --color-navy-800: #17314d;
+  --color-navy-700: #234466;
+  --color-teal-800: #0c5552;
+  --color-teal-700: #0f6e6b;
+  --color-teal-600: #18817c;
+  --color-teal-100: #e7f4f3;
+  --color-sand-50: #fbfaf7;
+  --color-sand-100: #f3efe6;
+  --color-sand-200: #e4ddd0;
+  --color-ink: #1c2430;
+  --color-muted: #5d6b7a;
+  --color-line: #e3ddd2;
+  --color-success-700: #246246;
+  --color-success-100: #e5f2eb;
+  --color-warning-700: #8a5b10;
+  --color-warning-100: #f8efd8;
+  --color-danger-700: #8d2b2b;
+  --color-danger-100: #f8e6e6;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-sand-50);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal-700);
+    outline-offset: 2px;
+  }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(16, 35, 58, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 35, 58, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
