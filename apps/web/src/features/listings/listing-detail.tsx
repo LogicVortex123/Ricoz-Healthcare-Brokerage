@@ -66,38 +66,38 @@ export function ListingDetail({ id }: { id: string }) {
   if (error || !listing) return <ErrorState title="Listing unavailable" message={error || 'This listing is not public.'} />;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <div className="motion-slide mx-auto max-w-5xl space-y-6">
       <Breadcrumbs items={[{ label: 'Practices', href: '/practices' }, { label: listing.name }]} />
-      <div>
+      <div className="reveal rounded-3xl bg-gradient-to-br from-navy-900 via-coral-700 to-sky-700 p-6 text-white shadow-lg sm:p-8">
         <div className="flex flex-wrap gap-2">
           <Badge tone="info">{labelFor(listing.category)}</Badge>
           <Badge>{labelFor(listing.transactionType)}</Badge>
         </div>
-        <h1 className="mt-3 font-serif text-4xl text-navy-900">{listing.name}</h1>
-        <p className="mt-2 text-muted">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
-        <p className="mt-4 font-serif text-3xl text-navy-900">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
-        {listing.listedAt ? <p className="mt-1 text-xs text-muted">Approved {formatDate(listing.listedAt)}</p> : null}
+        <h1 className="mt-4 font-serif text-4xl text-white sm:text-5xl">{listing.name}</h1>
+        <p className="mt-3 text-lg text-sand-100">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
+        <p className="mt-5 font-serif text-4xl text-gold-100">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
+        {listing.listedAt ? <p className="mt-2 text-sm text-sand-100">Approved {formatDate(listing.listedAt)}</p> : null}
       </div>
-      <Card className="grid gap-4 sm:grid-cols-3">
-        <Fact label="Years operating" value={listing.yearsInOperation?.toString() ?? '—'} />
-        <Fact label="Practitioners" value={listing.practitionerCount?.toString() ?? '—'} />
-        <Fact label="Ownership offered" value={listing.ownershipPercentage ? `${listing.ownershipPercentage}%` : labelFor(listing.ownershipType)} />
-      </Card>
-      <section>
-        <h2 className="font-serif text-2xl">About the practice</h2>
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-7">{listing.description}</p>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Fact label="Years operating" value={listing.yearsInOperation?.toString() ?? '—'} tone="teal" />
+        <Fact label="Practitioners" value={listing.practitionerCount?.toString() ?? '—'} tone="gold" />
+        <Fact label="Ownership offered" value={listing.ownershipPercentage ? `${listing.ownershipPercentage}%` : labelFor(listing.ownershipType)} tone="coral" />
+      </div>
+      <section className="reveal rounded-2xl border border-teal-700/25 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+        <h2 className="font-serif text-3xl text-navy-900">About the practice</h2>
+        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.description}</p>
       </section>
-      <section>
-        <h2 className="font-serif text-2xl">Facility</h2>
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-7">{listing.facilityInfo}</p>
+      <section className="reveal rounded-2xl border border-sky-700/25 bg-sky-100/50 p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+        <h2 className="font-serif text-3xl text-navy-900">Facility</h2>
+        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.facilityInfo}</p>
       </section>
-      <section>
-        <h2 className="font-serif text-2xl">Transition</h2>
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-7">{listing.transitionReason}</p>
-        <p className="mt-3 text-sm text-muted">The owner’s direct contact details and street address are not published. Use an inquiry to introduce yourself.</p>
+      <section className="reveal rounded-2xl border border-coral-700/25 bg-coral-100/60 p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+        <h2 className="font-serif text-3xl text-navy-900">Transition</h2>
+        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.transitionReason}</p>
+        <p className="mt-4 text-base leading-7 text-muted">The owner’s direct contact details and street address are not published. Use an inquiry to introduce yourself.</p>
       </section>
-      <Card>
-        <h2 className="font-serif text-2xl">Express interest</h2>
+      <Card className="border-teal-700/30 bg-teal-100">
+        <h2 className="font-serif text-3xl text-navy-900">Express interest</h2>
         {user?.role === 'BUYER' && inquiry ? (
           <p className="mt-3 text-sm leading-6">Your inquiry is {labelFor(inquiry.status).toLowerCase()}. The seller can see your name and email.</p>
         ) : null}
@@ -121,11 +121,16 @@ export function ListingDetail({ id }: { id: string }) {
   );
 }
 
-function Fact({ label, value }: { label: string; value: string }) {
+function Fact({ label, value, tone }: { label: string; value: string; tone: 'teal' | 'gold' | 'coral' }) {
+  const tones = {
+    teal: 'bg-teal-100',
+    gold: 'bg-gold-100',
+    coral: 'bg-coral-100',
+  };
   return (
-    <div>
-      <p className="text-xs font-semibold tracking-wide text-muted uppercase">{label}</p>
-      <p className="mt-1 text-sm">{value}</p>
+    <div className={`reveal rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-md ${tones[tone]}`}>
+      <p className="text-xs font-bold tracking-wide text-navy-800 uppercase">{label}</p>
+      <p className="mt-2 font-serif text-3xl text-navy-900">{value}</p>
     </div>
   );
 }

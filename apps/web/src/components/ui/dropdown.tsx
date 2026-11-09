@@ -46,7 +46,7 @@ export function Dropdown({
         <div
           role="menu"
           className={cn(
-            'absolute z-30 mt-1 min-w-56 rounded-xl border border-line bg-white p-1 shadow-lg',
+            'motion-pop absolute z-30 mt-2 min-w-64 rounded-2xl border border-line bg-white p-2 shadow-xl',
             align === 'right' ? 'right-0' : 'left-0',
           )}
           onClick={() => setOpen(false)}
@@ -59,10 +59,10 @@ export function Dropdown({
 }
 
 export function DropdownItem({ href, onClick, children }: { href?: string; onClick?: () => void; children: React.ReactNode }) {
-  const className = 'block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-sand-100';
+  const className = 'block w-full rounded-lg px-3 py-2.5 text-left text-base text-ink transition hover:bg-teal-100';
   if (href) {
     return (
-      <Link href={href} role="menuitem" className={className}>
+      <Link href={href} role="menuitem" className={className} onClick={onClick}>
         {children}
       </Link>
     );

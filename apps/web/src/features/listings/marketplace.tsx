@@ -131,17 +131,17 @@ export function Marketplace() {
         ) : null}
         {!loading && !error ? (
           <div className="grid gap-4 md:grid-cols-2">
-            {listings.map((listing) => (
+            {listings.map((listing, index) => (
               <Link key={listing.id} href={`/practices/${listing.id}`} className="block rounded-xl focus-visible:outline-none">
-                <Card className="h-full transition hover:border-teal-700">
+                <Card interactive className={['h-full border-teal-700/20 bg-teal-100/70', 'h-full border-coral-700/20 bg-coral-100/80', 'h-full border-sky-700/20 bg-sky-100/80', 'h-full border-gold-700/25 bg-gold-100/90'][index % 4]} style={{ transitionDelay: `${(index % 4) * 70}ms` }}>
                   <div className="flex flex-wrap gap-2">
                     <Badge tone="info">{labelFor(listing.category)}</Badge>
                     <Badge>{labelFor(listing.transactionType)}</Badge>
                   </div>
                   <h2 className="mt-3 font-serif text-2xl text-navy-900">{listing.name}</h2>
-                  <p className="mt-1 text-sm text-muted">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-ink">{listing.description}</p>
-                  <p className="mt-4 text-sm font-semibold text-navy-900">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
+                  <p className="mt-1 text-base text-muted">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
+                  <p className="mt-3 line-clamp-3 text-base leading-7 text-ink">{listing.description}</p>
+                  <p className="mt-4 text-lg font-semibold text-teal-800">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
                 </Card>
               </Link>
             ))}

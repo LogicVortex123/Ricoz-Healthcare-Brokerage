@@ -11,12 +11,12 @@ import type { AdminDashboard, BuyerDashboard, SellerDashboard } from '@/types/ap
 function Metrics({ items }: { items: { label: string; value: number; hint?: string }[] }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {items.map((item) => (
-        <Card key={item.label}>
-          <p className="text-sm text-muted">{item.label}</p>
-          <p className="mt-2 font-serif text-4xl text-navy-900">{item.value}</p>
-          {item.hint ? <p className="mt-2 text-sm text-muted">{item.hint}</p> : null}
-        </Card>
+      {items.map((item, index) => (
+        <Card key={item.label} className={['h-full border-teal-700/25 bg-teal-100', 'h-full border-coral-700/25 bg-coral-100', 'h-full border-gold-700/30 bg-gold-100', 'h-full border-sky-700/25 bg-sky-100'][index % 4]} style={{ transitionDelay: `${index * 80}ms` }}>
+            <p className="text-sm text-muted">{item.label}</p>
+            <p className="mt-2 font-serif text-4xl text-navy-900">{item.value}</p>
+            {item.hint ? <p className="mt-2 text-sm text-muted">{item.hint}</p> : null}
+          </Card>
       ))}
     </div>
   );

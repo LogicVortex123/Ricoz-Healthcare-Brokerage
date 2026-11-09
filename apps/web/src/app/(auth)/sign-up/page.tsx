@@ -8,7 +8,7 @@ export default function SignUpPage() {
   return (
     <Suspense fallback={<p className="text-sm text-muted">Loading registration…</p>}>
       <h1 className="font-serif text-4xl text-navy-900">Create an account</h1>
-      <p className="mt-2 mb-6 text-sm leading-6 text-muted">Buyer and seller accounts are open. Administrator access is issued separately.</p>
+      <p className="mt-2 mb-6 text-base leading-7 text-muted">Buyer and seller accounts are open. Administrator access is issued separately.</p>
       <SignUpForm />
     </Suspense>
   );

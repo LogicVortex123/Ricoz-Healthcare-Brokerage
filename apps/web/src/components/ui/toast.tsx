@@ -22,7 +22,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto rounded-lg px-4 py-3 text-sm text-white shadow-lg ${toast.tone === 'error' ? 'bg-danger-700' : 'bg-navy-900'}`}
+            className={`motion-toast pointer-events-auto rounded-lg px-4 py-3 text-sm text-white shadow-lg ${toast.tone === 'error' ? 'bg-danger-700' : 'bg-navy-900'}`}
           >
             {toast.message}
           </div>
