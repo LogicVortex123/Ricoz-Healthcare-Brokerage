@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-const apiProxy = process.env.API_PROXY_URL || 'http://localhost:4000';
+const apiProxy = (process.env.API_PROXY_URL || 'https://ricoz-healthcare-brokerage.onrender.com').replace(/\/$/, '');
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

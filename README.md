@@ -76,7 +76,7 @@ Deploy the web app as its own Vercel project with the root directory set to `app
 
 Set these environment variables before building:
 
-- `API_PROXY_URL` — public URL of the Express API, with no trailing slash
+- `API_PROXY_URL` — `https://ricoz-healthcare-brokerage.onrender.com`
 - Leave `NEXT_PUBLIC_API_URL` empty so the browser stays on the Vercel domain and Next.js proxies `/api` to the Express server
 
 The API keeps its own host because it is an Express process with a MongoDB connection. Set `WEB_ORIGIN` on the API to the Vercel site URL, and set `MONGODB_URI` and `JWT_SECRET` only on the API host. Do not put the database connection string in the web project.
