@@ -1,0 +1,17 @@
+{
+  "name": "@recoz/shared",
+  "version": "1.0.0",
+  "description": "Shared Zod schemas, enums, types, and constants for Dental Practice Transition Platform",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
+

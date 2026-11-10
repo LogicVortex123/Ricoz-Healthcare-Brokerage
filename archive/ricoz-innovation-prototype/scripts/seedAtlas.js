@@ -1,0 +1,223 @@
+const mongoose = require('mongoose');
+
+const uri = 'mongodb+srv://anushkadudhe9_db_user:d9bXoUfa40jbFD9d@cluster0.mdd8no5.mongodb.net/ricoz_healthcare?retryWrites=true&w=majority';
+
+const PracticeSchema = new mongoose.Schema({
+  code: { type: String, required: true, unique: true },
+  sector: { type: String, enum: ['dental', 'veterinary', 'specialist_medical'], required: true },
+  title: { type: String, required: true },
+  confidentialName: { type: String, required: true },
+  specialty: { type: String, required: true },
+  transitionType: { type: String, required: true }, // 'Buyout (100% Sale)', 'Partner Retirement', 'Partnership Transition'
+  city: { type: String, required: true },
+  zone: { type: String, required: true },
+  addressLine: { type: String, required: true },
+  pincode: { type: String, required: true },
+  state: { type: String, required: true },
+  operatoriesOrBeds: { type: String, required: true },
+  yearsInOperation: { type: Number, required: true },
+  revenueBand: { type: String, required: true },
+  exactRevenue: { type: String, required: true },
+  ebitda: { type: String, required: true },
+  askingPrice: { type: String, required: true },
+  sellerName: { type: String, required: true },
+  brokerName: { type: String, required: true },
+  stageId: { type: String, required: true },
+  daysInStage: { type: Number, required: true },
+  checklistProgress: { completed: Number, total: Number },
+  verifiedDocuments: { type: Number, required: true },
+  totalDocuments: { type: Number, required: true },
+  equipmentSummary: [String],
+  statutoryLicences: [String],
+  status: { type: String, default: 'listed' }
+}, { timestamps: true });
+
+const Practice = mongoose.models.Practice || mongoose.model('Practice', PracticeSchema);
+
+const samplePractices = [
+  {
+    code: 'HPT-BLR-01',
+    sector: 'dental',
+    title: 'High-Grossing Dental Center, South Bengaluru',
+    confidentialName: 'SmileCare Advanced Dental Clinic & Implantology',
+    specialty: 'General Dentistry & Orthodontics',
+    transitionType: 'Partner Retirement & Orderly Succession',
+    city: 'Bengaluru',
+    zone: 'Jayanagar 4th Block',
+    addressLine: '#412, 10th Main, Near South End Circle',
+    pincode: '560011',
+    state: 'Karnataka',
+    operatoriesOrBeds: '4 Operatories / Dental Treatment Chairs',
+    yearsInOperation: 14,
+    revenueBand: '₹50L - ₹1Cr',
+    exactRevenue: '₹84,50,000 / yr',
+    ebitda: '₹31,20,000 (37%)',
+    askingPrice: '₹1.15 Cr',
+    sellerName: 'Dr. Ramesh Rao (BDS, MDS - 24 yrs exp)',
+    brokerName: 'Anand Kumar (Sr. Healthcare Broker)',
+    stageId: 'due_diligence',
+    daysInStage: 4,
+    checklistProgress: { completed: 6, total: 8 },
+    verifiedDocuments: 7,
+    totalDocuments: 8,
+    equipmentSummary: ['4x Sirona Intego Chairs', 'Carestream CS 8100 3D OPG', 'RVG 5200 Digital Sensors', 'Euronda Class B Autoclave'],
+    statutoryLicences: ['KPME Registration (Valid 2029)', 'KSPCB Biomedical Waste', 'AERB X-Ray Certification']
+  },
+  {
+    code: 'HPT-MUM-04',
+    sector: 'veterinary',
+    title: 'Premier Companion Animal Hospital & Surgery, Bandra West',
+    confidentialName: 'Metro Paws Multispeciality Veterinary Hospital',
+    specialty: 'Small Animal Medicine & Orthopedic Surgery',
+    transitionType: 'Buyout (100% Practice Acquisition)',
+    city: 'Mumbai',
+    zone: 'Bandra West (Waterfield Rd)',
+    addressLine: 'Plot 18, Near Turner Road',
+    pincode: '400050',
+    state: 'Maharashtra',
+    operatoriesOrBeds: '2 Operating Theatres, 12 Recovery Kennels, Diagnostics Lab',
+    yearsInOperation: 11,
+    revenueBand: '₹1Cr - ₹2Cr',
+    exactRevenue: '₹1,58,00,000 / yr',
+    ebitda: '₹62,00,000 (39%)',
+    askingPrice: '₹2.45 Cr',
+    sellerName: 'Dr. Cyrus Bharucha (BVSc & AH, MVSc Surgery)',
+    brokerName: 'Neha Mehta (Director, Healthcare M&A)',
+    stageId: 'initial_offer',
+    daysInStage: 3,
+    checklistProgress: { completed: 8, total: 8 },
+    verifiedDocuments: 9,
+    totalDocuments: 9,
+    equipmentSummary: ['Mindray Digital Ultrasound', 'Isoflurane Anesthesia Workstation', 'DR Digital X-ray', 'Idexx In-Clinic Hematology Suite'],
+    statutoryLicences: ['Maharashtra State Veterinary Council Lic.', 'BMC Trade License', 'Biomedical Waste MPCB Approval']
+  },
+  {
+    code: 'HPT-DEL-09',
+    sector: 'specialist_medical',
+    title: 'Aesthetic Dermatology & Day-Care Laser Clinic, South Delhi',
+    confidentialName: 'Aura Skin, Laser & Hair Restoration Clinic',
+    specialty: 'Dermatology, Trichology & Aesthetics',
+    transitionType: 'Partnership Transition (30% Equity Retained)',
+    city: 'Delhi NCR',
+    zone: 'Greater Kailash 1 (M-Block)',
+    addressLine: 'M-42, Main Market, GK-1',
+    pincode: '110048',
+    state: 'Delhi',
+    operatoriesOrBeds: '5 Procedure Suites, 1 Minor OT, Consultation Lounges',
+    yearsInOperation: 9,
+    revenueBand: '₹2Cr - ₹5Cr',
+    exactRevenue: '₹2,85,00,000 / yr',
+    ebitda: '₹1,18,00,000 (41%)',
+    askingPrice: '₹4.20 Cr',
+    sellerName: 'Dr. Sanjana Malhotra (MD Dermatology, DNB)',
+    brokerName: 'Anand Kumar (Sr. Healthcare Broker)',
+    stageId: 'info_disclosure',
+    daysInStage: 2,
+    checklistProgress: { completed: 5, total: 7 },
+    verifiedDocuments: 6,
+    totalDocuments: 7,
+    equipmentSummary: ['Lumenis M22 IPL Machine', 'Candela GentleYAG Laser', 'Hydrafacial Elite MD', 'Cryolipolysis Body Contouring'],
+    statutoryLicences: ['Delhi Medical Council Reg.', 'Delhi Fire Services NOC', 'Biomedical DPCC License']
+  },
+  {
+    code: 'HPT-HYD-12',
+    sector: 'specialist_medical',
+    title: 'Cataract & Refractive Eye Care Hospital, Jubilee Hills',
+    confidentialName: 'VisionCraft Advanced Eye Centre',
+    specialty: 'Ophthalmology & Day-Care Cataract Surgery',
+    transitionType: 'Partner Retirement & Orderly Succession',
+    city: 'Hyderabad',
+    zone: 'Road No. 36 Jubilee Hills',
+    addressLine: 'Plot 482, Near Peddamma Temple',
+    pincode: '500033',
+    state: 'Telangana',
+    operatoriesOrBeds: '2 Laminar Flow Modular OTs, 6 Day-Care Beds, OPD',
+    yearsInOperation: 16,
+    revenueBand: '₹2Cr - ₹5Cr',
+    exactRevenue: '₹3,40,00,000 / yr',
+    ebitda: '₹1,32,00,000 (39%)',
+    askingPrice: '₹5.10 Cr',
+    sellerName: 'Dr. Srinivas Reddy (MS Ophthalmology)',
+    brokerName: 'Neha Mehta (Director, Healthcare M&A)',
+    stageId: 'due_diligence',
+    daysInStage: 5,
+    checklistProgress: { completed: 7, total: 8 },
+    verifiedDocuments: 8,
+    totalDocuments: 8,
+    equipmentSummary: ['Alcon Centurion Phaco System', 'Zeiss Lumera 700 Surgical Microscope', 'Topcon OCT & Fundus Camera'],
+    statutoryLicences: ['Telangana Clinical Establishments Act', 'AERB Certificate', 'TSPCB Authorization']
+  },
+  {
+    code: 'HPT-PUN-02',
+    sector: 'veterinary',
+    title: 'Full-Service Veterinary Clinic & Pet Boarding, Koregaon Park',
+    confidentialName: 'Pune Pet Wellness & Critical Care',
+    specialty: 'General Veterinary Medicine & Surgery',
+    transitionType: 'Buyout (100% Practice Acquisition)',
+    city: 'Pune',
+    zone: 'Koregaon Park Lane 7',
+    addressLine: 'Bungalow 14, Lane 7',
+    pincode: '411001',
+    state: 'Maharashtra',
+    operatoriesOrBeds: '1 OT, 2 Consult Rooms, 8 Boarding Suites',
+    yearsInOperation: 8,
+    revenueBand: '₹50L - ₹1Cr',
+    exactRevenue: '₹68,00,000 / yr',
+    ebitda: '₹27,00,000 (40%)',
+    askingPrice: '₹98 Lakh',
+    sellerName: 'Dr. Ananya Joshi (BVSc)',
+    brokerName: 'Rohan Shinde (Transition Consultant)',
+    stageId: 'nda',
+    daysInStage: 2,
+    checklistProgress: { completed: 3, total: 5 },
+    verifiedDocuments: 4,
+    totalDocuments: 5,
+    equipmentSummary: ['Vet Anaesthesia Unit', 'Bionet Patient Monitor', 'Dental Scaler & Polisher', 'In-house Lab Centrifuge'],
+    statutoryLicences: ['Maharashtra State Veterinary Council', 'PMC Trade License', 'Biomedical Waste Agreement']
+  },
+  {
+    code: 'HPT-CHE-07',
+    sector: 'dental',
+    title: 'Boutique Implant & Cosmetic Dental Studio, Alwarpet',
+    confidentialName: 'Chennai Smiles Implant Center',
+    specialty: 'Implantology & Prosthodontics',
+    transitionType: 'Buyout (100% Practice Acquisition)',
+    city: 'Chennai',
+    zone: 'TTK Road, Alwarpet',
+    addressLine: 'Old No. 42, New No. 89, TTK Road',
+    pincode: '600018',
+    state: 'Tamil Nadu',
+    operatoriesOrBeds: '3 Advanced Operatories',
+    yearsInOperation: 10,
+    revenueBand: '₹50L - ₹1Cr',
+    exactRevenue: '₹76,00,000 / yr',
+    ebitda: '₹29,00,000 (38%)',
+    askingPrice: '₹1.10 Cr',
+    sellerName: 'Dr. Murali Krishnan (MDS Prostho)',
+    brokerName: 'Anand Kumar (Sr. Healthcare Broker)',
+    stageId: 'legal_review',
+    daysInStage: 6,
+    checklistProgress: { completed: 7, total: 7 },
+    verifiedDocuments: 8,
+    totalDocuments: 8,
+    equipmentSummary: ['Planmeca Compact i Classic Chairs (x3)', 'Planmeca ProMax 2D/3D', 'W&H Implantmed Unit'],
+    statutoryLicences: ['TN Clinical Establishments Act', 'AERB Certified', 'TNPCB Biomedical Clearance']
+  }
+];
+
+async function seed() {
+  console.log('Connecting to Atlas to seed live healthcare practice data...');
+  await mongoose.connect(uri);
+  console.log('Connected! Clearing previous practice records...');
+  await Practice.deleteMany({});
+  console.log('Inserting real-world Dental, Veterinary, and Specialist Medical practices...');
+  const inserted = await Practice.insertMany(samplePractices);
+  console.log(`Successfully seeded ${inserted.length} healthcare practice transitions into MongoDB Atlas!`);
+  await mongoose.disconnect();
+  process.exit(0);
+}
+
+seed().catch(err => {
+  console.error('Seed failed:', err);
+  process.exit(1);
+});

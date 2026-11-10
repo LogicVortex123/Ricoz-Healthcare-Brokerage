@@ -1,0 +1,19 @@
+{
+  "name": "recoz-innovation-projects",
+  "version": "1.0.0",
+  "description": "Healthcare Practice Transition Brokerage",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix apps/web run dev",
+    "dev:api": "npm --prefix apps/api run dev",
+    "dev:mongo": "npm --prefix apps/api run dev:mongo",
+    "seed": "npm --prefix apps/api run seed",
+    "build": "npm --prefix apps/api run build && npm --prefix apps/web run build",
+    "lint": "npm --prefix apps/api run lint && npm --prefix apps/web run lint",
+    "typecheck": "npm --prefix apps/api run typecheck && npm --prefix apps/web run typecheck",
+    "test": "npm --prefix apps/api test",
+    "test:e2e": "npm --prefix apps/web run test:e2e",
+    "worker": "npm --prefix apps/api run worker"
+  },
+  "packageManager": "npm@11.6.2"
+}

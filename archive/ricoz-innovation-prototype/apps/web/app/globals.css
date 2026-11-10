@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: #f6f7f9;
+    color: #0f172a;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+
+  ::selection {
+    background: rgba(20, 184, 166, 0.22);
+  }
+
+  button,
+  a,
+  [role='button'] {
+    @apply transition-colors duration-150;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid rgba(20, 184, 166, 0.55);
+    outline-offset: 2px;
+  }
+
+  input,
+  select,
+  textarea {
+    transition: box-shadow 150ms, border-color 150ms;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not(.bare):focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: rgba(14, 85, 102, 0.5);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+  }
+
+  /* Numbers line up in tables & KPI tiles */
+  .tabular,
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e5e8ed;
+    box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.05);
+  }
+  .page-title {
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+  }
+  .page-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6dbe2;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8c0cb;
+  background-clip: content-box;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  background-clip: content-box;
+}
+
+/* Overlay entrance animations */
+.modal-overlay,
+.drawer-overlay {
+  animation: fade-in 150ms ease-out;
+  /* overlays often live inside `space-y-*` stacks — never inherit their margin */
+  margin: 0 !important;
+}
+.modal-overlay > * {
+  animation: scale-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.drawer-overlay > * {
+  animation: slide-in-right 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.97) translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in-right { from { transform: translateX(100%); } to { transform: none; } }
+
+/* Connected application workspace styles live in platform.css. */
+.platform-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+}
+.platform-fields label:has(textarea) {
+  grid-column: 1 / -1;
+}
+.platform-inset {
+  background: #f4f8f8;
+  border: 1px solid #dce5e7;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 14px 0;
+}
+.platform fieldset {
+  border: 1px solid #c9d7da;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 20px 0;
+}
+.platform legend,
+.platform caption {
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px;
+  text-align: left;
+}
+.platform .platform-checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 0;
+  font-weight: 400;
+}
+.platform code {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+.platform details {
+  padding: 20px;
+  border: 1px solid #dce5e7;
+  background: #fff;
+  margin: 20px 0;
+  border-radius: 12px;
+}
+.platform summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.platform dt {
+  font-weight: 600;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.platform dd {
+  overflow-wrap: anywhere;
+  color: #536970;
+  font-size: 14px;
+  margin: 4px 0 10px;
+}
+.platform table {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+}
+.platform td,
+.platform th {
+  padding: 12px 8px;
+  border-bottom: 1px solid #dce5e7;
+}
