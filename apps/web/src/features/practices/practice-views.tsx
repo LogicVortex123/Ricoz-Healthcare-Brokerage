@@ -10,6 +10,8 @@ import { ErrorState } from '@/components/ui/error-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/toast';
+import { Journey } from '@/components/ui/journey';
+import { DealRoom } from '@/features/deals/deal-room';
 import { api, ApiError } from '@/lib/api';
 import { labelFor } from '@/lib/constants';
 import { formatDate, formatMoney, locationOf } from '@/lib/format';
@@ -73,7 +75,7 @@ export function PracticeList() {
                   <p className="mt-1 text-xs text-muted">Updated {formatDate(practice.updatedAt)}</p>
                 </div>
                 <Button href={`/dashboard/seller/practices/${practice.id}`} variant="secondary" size="sm">
-                  View
+                  {practice.status === 'DRAFT' || practice.status === 'REJECTED' ? 'Continue' : 'Open'}
                 </Button>
               </Card>
             ))
@@ -135,6 +137,7 @@ export function PracticeDetail({ id }: { id: string }) {
         <Badge>{labelFor(practice.category)}</Badge>
         <Badge>{labelFor(practice.transactionType)}</Badge>
       </div>
+      <Journey label="Listing progress" steps={sellerSteps(practice.status)} />
       {practice.status === 'REJECTED' && practice.rejectionReason ? (
         <div className="rounded-xl border border-danger-100 bg-danger-100/40 p-4 text-sm text-danger-700">
           <p className="font-semibold">Changes requested</p>
@@ -169,6 +172,7 @@ export function PracticeDetail({ id }: { id: string }) {
           ))}
         </ol>
       </Card>
+      <DealRoom practiceId={practice.id} />
       <div className="flex flex-wrap gap-2">
         {editable ? <Button href={`/dashboard/seller/practices/${practice.id}/edit`}>Edit</Button> : null}
         {editable ? (
@@ -189,6 +193,26 @@ export function PracticeDetail({ id }: { id: string }) {
       </div>
     </div>
   );
+}
+
+function sellerSteps(status: Practice['status']) {
+  const stage = status === 'PENDING_REVIEW' ? 1 : status === 'APPROVED' ? 3 : 0;
+  const details = [
+    status === 'REJECTED'
+      ? 'The reviewer sent a reason. Edit the listing, then submit it again.'
+      : status === 'WITHDRAWN'
+        ? 'This listing is withdrawn. Edit it and submit again when you are ready.'
+        : 'Only you can see a draft. Submit it when the required fields are complete.',
+    'An administrator checks the listing. Buyers cannot see it yet.',
+    'After approval, buyers can search the city and region. The street address stays off the page.',
+    'Notes, the worksheet, and the closing list stay with the people allowed to see this practice.',
+  ];
+  const labels = ['Draft', 'Review', 'Marketplace', 'Deal room'];
+  return labels.map((label, index) => ({
+    label,
+    detail: details[index],
+    state: index < stage ? 'done' as const : index === stage ? 'current' as const : 'upcoming' as const,
+  }));
 }
 
 function Detail({ label, value }: { label: string; value: string }) {

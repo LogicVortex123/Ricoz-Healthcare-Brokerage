@@ -10,6 +10,8 @@ import { Field } from '@/components/ui/field';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/toast';
+import { Journey } from '@/components/ui/journey';
+import { DealRoom } from '@/features/deals/deal-room';
 import { useAuth } from '@/features/auth/auth-provider';
 import { api, ApiError } from '@/lib/api';
 import { labelFor } from '@/lib/constants';
@@ -66,40 +68,52 @@ export function ListingDetail({ id }: { id: string }) {
   if (error || !listing) return <ErrorState title="Listing unavailable" message={error || 'This listing is not public.'} />;
 
   return (
-    <div className="motion-slide mx-auto max-w-5xl space-y-6">
+    <div className="motion-slide mx-auto max-w-5xl space-y-5">
       <Breadcrumbs items={[{ label: 'Practices', href: '/practices' }, { label: listing.name }]} />
-      <div className="reveal rounded-3xl bg-gradient-to-br from-navy-900 via-coral-700 to-sky-700 p-6 text-white shadow-lg sm:p-8">
-        <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{labelFor(listing.category)}</Badge>
-          <Badge>{labelFor(listing.transactionType)}</Badge>
+      <div className="rounded-xl border border-line bg-white p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="info">{labelFor(listing.category)}</Badge>
+              <Badge>{labelFor(listing.transactionType)}</Badge>
+            </div>
+            <h1 className="mt-3 font-serif text-3xl text-navy-900 sm:text-4xl">{listing.name}</h1>
+            <p className="mt-2 text-sm text-muted">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
+            {listing.listedAt ? <p className="mt-1 text-sm text-muted">Approved {formatDate(listing.listedAt)}</p> : null}
+          </div>
+          <p className="font-serif text-3xl text-navy-900">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
         </div>
-        <h1 className="mt-4 font-serif text-4xl text-white sm:text-5xl">{listing.name}</h1>
-        <p className="mt-3 text-lg text-sand-100">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
-        <p className="mt-5 font-serif text-4xl text-gold-100">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
-        {listing.listedAt ? <p className="mt-2 text-sm text-sand-100">Approved {formatDate(listing.listedAt)}</p> : null}
       </div>
+      <Journey
+        label="How to proceed"
+        steps={buyerSteps(Boolean(user), user?.role === 'BUYER', Boolean(inquiry))}
+      />
       <div className="grid gap-4 sm:grid-cols-3">
-        <Fact label="Years operating" value={listing.yearsInOperation?.toString() ?? '—'} tone="teal" />
-        <Fact label="Practitioners" value={listing.practitionerCount?.toString() ?? '—'} tone="gold" />
-        <Fact label="Ownership offered" value={listing.ownershipPercentage ? `${listing.ownershipPercentage}%` : labelFor(listing.ownershipType)} tone="coral" />
+        <Fact label="Years operating" value={listing.yearsInOperation?.toString() ?? '—'} />
+        <Fact label="Practitioners" value={listing.practitionerCount?.toString() ?? '—'} />
+        <Fact label="Ownership offered" value={listing.ownershipPercentage ? `${listing.ownershipPercentage}%` : labelFor(listing.ownershipType)} />
       </div>
-      <section className="reveal rounded-2xl border border-teal-700/25 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
-        <h2 className="font-serif text-3xl text-navy-900">About the practice</h2>
-        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.description}</p>
+      <section className="rounded-xl border border-line bg-white p-6">
+        <h2 className="font-serif text-2xl text-navy-900">About the practice</h2>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{listing.description}</p>
       </section>
-      <section className="reveal rounded-2xl border border-sky-700/25 bg-sky-100/50 p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
-        <h2 className="font-serif text-3xl text-navy-900">Facility</h2>
-        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.facilityInfo}</p>
+      <section className="rounded-xl border border-line bg-white p-6">
+        <h2 className="font-serif text-2xl text-navy-900">Facility</h2>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{listing.facilityInfo}</p>
       </section>
-      <section className="reveal rounded-2xl border border-coral-700/25 bg-coral-100/60 p-6 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
-        <h2 className="font-serif text-3xl text-navy-900">Transition</h2>
-        <p className="mt-3 whitespace-pre-wrap text-base leading-8">{listing.transitionReason}</p>
+      <section className="rounded-xl border border-line bg-white p-6">
+        <h2 className="font-serif text-2xl text-navy-900">Transition</h2>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{listing.transitionReason}</p>
         <p className="mt-4 text-base leading-7 text-muted">The owner’s direct contact details and street address are not published. Use an inquiry to introduce yourself.</p>
       </section>
-      <Card className="border-teal-700/30 bg-teal-100">
-        <h2 className="font-serif text-3xl text-navy-900">Express interest</h2>
+      {user ? <DealRoom practiceId={id} /> : null}
+      <Card>
+        <h2 className="font-serif text-2xl text-navy-900">Express interest</h2>
         {user?.role === 'BUYER' && inquiry ? (
-          <p className="mt-3 text-sm leading-6">Your inquiry is {labelFor(inquiry.status).toLowerCase()}. The seller can see your name and email.</p>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-6">Your inquiry is {labelFor(inquiry.status).toLowerCase()}. The seller can see your name and email. Messages and offers stay on the thread.</p>
+            <Button href={`/dashboard/buyer/inquiries/${inquiry.id}`}>Continue in the thread</Button>
+          </div>
         ) : null}
         {user?.role === 'BUYER' && !inquiry ? (
           <form className="mt-4 space-y-4" onSubmit={submitInquiry}>
@@ -121,16 +135,21 @@ export function ListingDetail({ id }: { id: string }) {
   );
 }
 
-function Fact({ label, value, tone }: { label: string; value: string; tone: 'teal' | 'gold' | 'coral' }) {
-  const tones = {
-    teal: 'bg-teal-100',
-    gold: 'bg-gold-100',
-    coral: 'bg-coral-100',
-  };
+function buyerSteps(signedIn: boolean, isBuyer: boolean, hasInquiry: boolean) {
+  const inquire = !signedIn ? 'Sign in with a buyer account to introduce yourself.' : isBuyer ? (hasInquiry ? 'The seller has your name and email.' : 'One message is enough to start.') : 'Inquiries are sent from a buyer account.';
+  return [
+    { label: 'Read the listing', detail: 'You see the city and region, not a street address or the owner’s phone.', state: 'done' as const },
+    { label: 'Send one inquiry', detail: inquire, state: hasInquiry ? 'done' as const : 'current' as const },
+    { label: 'Use the deal room', detail: 'Notes, the worksheet, and the closing list open after the confidentiality acknowledgement.', state: hasInquiry ? 'current' as const : 'upcoming' as const },
+    { label: 'Record a proposal', detail: 'Messages and offers stay on the inquiry thread. An accepted offer does not transfer ownership.', state: 'upcoming' as const },
+  ];
+}
+
+function Fact({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`reveal rounded-2xl p-5 transition duration-300 hover:-translate-y-1 hover:shadow-md ${tones[tone]}`}>
-      <p className="text-xs font-bold tracking-wide text-navy-800 uppercase">{label}</p>
-      <p className="mt-2 font-serif text-3xl text-navy-900">{value}</p>
+    <div className="rounded-xl border border-line bg-white px-5 py-4">
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">{label}</p>
+      <p className="mt-1 font-serif text-2xl text-navy-900">{value}</p>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { listingRouter } from './modules/listings/listing.routes';
 import { inquiryRouter } from './modules/inquiries/inquiry.routes';
 import { adminRouter } from './modules/admin/admin.routes';
 import { dashboardRouter } from './modules/dashboard/dashboard.routes';
+import { dealRouter } from './modules/deals/deal.routes';
 
 export function createApp(env: Env, options?: { website?: (req: Request, res: Response) => void }) {
   const app = express();
@@ -24,7 +25,7 @@ export function createApp(env: Env, options?: { website?: (req: Request, res: Re
     cors({
       origin: env.webOrigin,
       credentials: true,
-      methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'X-PracticeBridge-Request'],
     }),
   );
@@ -50,6 +51,7 @@ export function createApp(env: Env, options?: { website?: (req: Request, res: Re
   app.use('/api/inquiries', inquiryRouter);
   app.use('/api/admin', adminRouter);
   app.use('/api/dashboard', dashboardRouter);
+  app.use('/api/deals', dealRouter);
 
   app.use('/api', (_req, res) => {
     res.status(404).json({ error: { code: 'NOT_FOUND', message: 'That API endpoint does not exist.' } });

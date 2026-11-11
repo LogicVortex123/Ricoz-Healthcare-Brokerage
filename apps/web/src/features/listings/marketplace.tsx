@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -32,7 +33,14 @@ type Filters = {
 
 const initial: Filters = { q: '', category: '', specialty: '', state: '', city: '', minPrice: '', maxPrice: '', sort: 'newest', page: 1 };
 
+const categoryAccent: Record<string, string> = {
+  DENTAL: 'border-t-teal-700',
+  VETERINARY: 'border-t-coral-700',
+  SPECIALIST_MEDICAL: 'border-t-sky-700',
+};
+
 export function Marketplace() {
+  const pathname = usePathname();
   const [filters, setFilters] = useState<Filters>(initial);
   const [query, setQuery] = useState('');
   const [listings, setListings] = useState<Practice[]>([]);
@@ -77,7 +85,7 @@ export function Marketplace() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-      <FilterPanel>
+      <FilterPanel className={pathname.startsWith('/dashboard') ? 'lg:top-4' : 'lg:top-20'}>
         <SearchField value={query} onChange={setQuery} placeholder="Search name, specialty, or city" label="Search practices" />
         <Field label="Category" htmlFor="category">
           <Select id="category" value={filters.category} onChange={(event) => update({ category: event.target.value })}>
@@ -108,7 +116,7 @@ export function Marketplace() {
       </FilterPanel>
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-muted">{meta ? `${meta.total} approved ${meta.total === 1 ? 'practice' : 'practices'}` : 'Approved practices'}</p>
+          <p className="text-sm font-semibold text-navy-900">{meta ? `${meta.total} approved ${meta.total === 1 ? 'practice' : 'practices'}` : 'Approved practices'}</p>
           <label className="text-sm text-muted">
             <span className="sr-only">Sort</span>
             <Select value={filters.sort} onChange={(event) => update({ sort: event.target.value })} className="w-44">
@@ -131,17 +139,34 @@ export function Marketplace() {
         ) : null}
         {!loading && !error ? (
           <div className="grid gap-4 md:grid-cols-2">
-            {listings.map((listing, index) => (
-              <Link key={listing.id} href={`/practices/${listing.id}`} className="block rounded-xl focus-visible:outline-none">
-                <Card interactive className={['h-full border-teal-700/20 bg-teal-100/70', 'h-full border-coral-700/20 bg-coral-100/80', 'h-full border-sky-700/20 bg-sky-100/80', 'h-full border-gold-700/25 bg-gold-100/90'][index % 4]} style={{ transitionDelay: `${(index % 4) * 70}ms` }}>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge tone="info">{labelFor(listing.category)}</Badge>
-                    <Badge>{labelFor(listing.transactionType)}</Badge>
+            {listings.map((listing) => (
+              <Link key={listing.id} href={`/practices/${listing.id}`} className="group block rounded-xl focus-visible:outline-none">
+                <Card interactive className={`h-full border-t-4 bg-white ${categoryAccent[listing.category] ?? 'border-t-teal-700'}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex flex-wrap gap-2">
+                      <Badge tone="info">{labelFor(listing.category)}</Badge>
+                      <Badge>{labelFor(listing.transactionType)}</Badge>
+                    </div>
+                    <p className="text-right font-serif text-2xl text-navy-950">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
                   </div>
-                  <h2 className="mt-3 font-serif text-2xl text-navy-900">{listing.name}</h2>
-                  <p className="mt-1 text-base text-muted">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
-                  <p className="mt-3 line-clamp-3 text-base leading-7 text-ink">{listing.description}</p>
-                  <p className="mt-4 text-lg font-semibold text-teal-800">{formatMoney(listing.askingPrice, listing.priceVisibility)}</p>
+                  <h2 className="mt-4 font-serif text-2xl text-navy-950 group-hover:text-teal-800">{listing.name}</h2>
+                  <p className="mt-1 text-sm font-medium text-navy-800">{listing.specialty || 'Specialty not specified'} · {locationOf(listing.city, listing.state)}</p>
+                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-navy-900">{listing.description}</p>
+                  <dl className="mt-4 grid grid-cols-3 gap-2 border-t border-line pt-3 text-sm">
+                    <div>
+                      <dt className="text-xs font-semibold tracking-wide text-navy-700 uppercase">Years</dt>
+                      <dd className="font-semibold text-navy-950">{listing.yearsInOperation ?? '—'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-semibold tracking-wide text-navy-700 uppercase">Practitioners</dt>
+                      <dd className="font-semibold text-navy-950">{listing.practitionerCount ?? '—'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-semibold tracking-wide text-navy-700 uppercase">Share</dt>
+                      <dd className="font-semibold text-navy-950">{listing.ownershipPercentage ? `${listing.ownershipPercentage}%` : '—'}</dd>
+                    </div>
+                  </dl>
+                  <p className="mt-3 text-sm font-semibold text-teal-800">View practice</p>
                 </Card>
               </Link>
             ))}

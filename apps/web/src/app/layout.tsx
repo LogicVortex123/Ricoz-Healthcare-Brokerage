@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google';
+import { Atmosphere } from '@/components/motion/atmosphere';
+import { NavigationProgress } from '@/components/motion/navigation-progress';
 import { ScrollEffects } from '@/components/motion/scroll-effects';
 import { AuthProvider } from '@/features/auth/auth-provider';
 import { ToastProvider } from '@/components/ui/toast';
@@ -16,10 +18,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${fraunces.variable}`} data-scroll-behavior="smooth">
-      <body className="font-sans text-[17px] leading-7 text-ink antialiased">
+      <body className="font-sans text-base leading-6 text-ink antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2">
           Skip to content
         </a>
+        <Atmosphere />
+        <NavigationProgress />
         <ScrollEffects />
         <AuthProvider>
           <ToastProvider>{children}</ToastProvider>

@@ -23,7 +23,7 @@ type Props = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> & {
 
 export function Button({ href, variant = 'primary', size = 'md', loading, className, children, disabled, onClick, ...props }: Props) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-lg font-semibold shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0',
+    'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60',
     variants[variant],
     sizes[size],
     className,

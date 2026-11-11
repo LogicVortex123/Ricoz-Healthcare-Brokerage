@@ -73,6 +73,7 @@ export type BuyerDashboard = {
   openInquiries: number;
   acknowledgedInquiries: number;
   closedInquiries: number;
+  savedPractices: number;
   recentInquiries: Inquiry[];
 };
 

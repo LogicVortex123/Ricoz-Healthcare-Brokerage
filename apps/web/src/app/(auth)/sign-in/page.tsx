@@ -6,10 +6,12 @@ export const metadata: Metadata = { title: 'Sign in' };
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-muted">Loading sign in…</p>}>
+    <>
       <h1 className="font-serif text-4xl text-navy-900">Sign in</h1>
-      <p className="mt-2 mb-6 text-base leading-7 text-muted">Use the email and password for your PracticeBridge account.</p>
-      <SignInForm />
-    </Suspense>
+      <p className="mt-2 mb-6 text-base leading-7 text-muted">Use the email and password for your PracticeBridge account. Buyers and sellers use the same page.</p>
+      <Suspense fallback={<p className="text-sm text-muted">Loading sign in…</p>}>
+        <SignInForm />
+      </Suspense>
+    </>
   );
 }

@@ -27,7 +27,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center" role="presentation">
       <button className="motion-fade absolute inset-0 bg-navy-950/50" aria-label="Close dialog" onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby="dialog-title" className="motion-pop relative w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+      <div role="dialog" aria-modal="true" aria-labelledby="dialog-title" className="motion-pop relative w-full max-w-lg rounded-xl border border-line bg-white p-6 shadow-md">
         <h2 id="dialog-title" className="font-serif text-2xl text-navy-900">
           {title}
         </h2>

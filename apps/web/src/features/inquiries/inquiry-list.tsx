@@ -71,12 +71,12 @@ export function InquiryList({ audience }: { audience: 'buyer' | 'seller' | 'admi
         <Card key={item.id}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <a className="font-serif text-xl text-navy-900" href={`/practices/${item.practice.id}`}>{item.practice.name}</a>
+              <a className="font-serif text-2xl text-navy-900" href={`/practices/${item.practice.id}`}>{item.practice.name}</a>
               <p className="text-sm text-muted">{labelFor(item.practice.category)} · {locationOf(item.practice.city, item.practice.state)} · {formatDate(item.createdAt)}</p>
             </div>
             <Badge tone={statusTone(item.status)}>{labelFor(item.status)}</Badge>
           </div>
-          <p className="mt-3 whitespace-pre-wrap text-sm leading-6">{item.message}</p>
+          <blockquote className="mt-4 rounded-xl bg-sand-50 px-4 py-3 text-sm leading-6 text-ink">“{item.message}”</blockquote>
           {item.buyer ? (
             <p className="mt-3 text-sm text-muted">
               {item.buyer.name} · {item.buyer.email}
@@ -85,12 +85,15 @@ export function InquiryList({ audience }: { audience: 'buyer' | 'seller' | 'admi
             </p>
           ) : null}
           {item.seller ? <p className="mt-2 text-sm text-muted">Seller: {item.seller.name} · {item.seller.email}</p> : null}
-          {audience === 'seller' && item.status !== 'CLOSED' ? (
-            <div className="mt-4 flex gap-2">
-              {item.status === 'OPEN' ? <Button type="button" size="sm" onClick={() => void update(item.id, 'ACKNOWLEDGED')}>Acknowledge</Button> : null}
-              <Button type="button" size="sm" variant="secondary" onClick={() => void update(item.id, 'CLOSED')}>Close</Button>
-            </div>
-          ) : null}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button href={`${audience === 'admin' ? '/dashboard/admin/inquiries' : audience === 'seller' ? '/dashboard/seller/inquiries' : '/dashboard/buyer/inquiries'}/${item.id}`} size="sm">Open thread</Button>
+            {audience === 'seller' && item.status !== 'CLOSED' ? (
+              <>
+                {item.status === 'OPEN' ? <Button type="button" size="sm" onClick={() => void update(item.id, 'ACKNOWLEDGED')}>Acknowledge</Button> : null}
+                <Button type="button" size="sm" variant="ghost" onClick={() => void update(item.id, 'CLOSED')}>Close</Button>
+              </>
+            ) : null}
+          </div>
         </Card>
       ))}
     </div>

@@ -4,9 +4,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="relative grid min-h-screen overflow-hidden bg-sand-50 lg:grid-cols-[1.05fr_0.95fr]">
       <div className="aurora" aria-hidden="true" />
-      <aside className="relative hidden flex-col justify-between bg-gradient-to-br from-navy-950 via-coral-700 to-teal-800 p-12 text-white lg:flex">
+      <aside className="relative hidden flex-col justify-between bg-navy-950 p-12 text-white lg:flex">
         <Logo light />
-        <div className="reveal from-left max-w-lg">
+        <div className="max-w-lg">
           <p className="text-sm font-semibold tracking-wide text-gold-100 uppercase">Dental · Veterinary · Specialist medical</p>
           <p className="mt-4 font-serif text-5xl leading-tight">Your account keeps the listing private until it is reviewed.</p>
           <ul className="mt-8 space-y-4 text-lg leading-8 text-sand-100">
@@ -21,8 +21,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <header className="mx-auto flex h-16 w-full max-w-lg items-center px-4 sm:px-6 lg:hidden">
           <Logo />
         </header>
-        <main id="main" className="mx-auto flex w-full max-w-lg flex-1 items-center px-4 py-8 sm:px-6">
-          <div className="reveal from-right w-full rounded-3xl border border-teal-700/30 bg-white p-6 shadow-xl shadow-teal-700/10 sm:p-8">{children}</div>
+        <main id="main" className="mx-auto flex w-full max-w-lg flex-1 items-center px-4 py-10 sm:px-6">
+          <div className="reveal from-right w-full">{children}</div>
         </main>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 import { DashboardShell } from '@/components/layout/dashboard-shell';
+import { RouteLoading } from '@/components/ui/route-loading';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={<div className="grid min-h-screen place-items-center text-sm text-muted">Loading your workspace…</div>}>
+    <Suspense fallback={<RouteLoading title="Loading your workspace" />}>
       <DashboardShell>{children}</DashboardShell>
     </Suspense>
   );

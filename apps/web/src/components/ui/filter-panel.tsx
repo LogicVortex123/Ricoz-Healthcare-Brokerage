@@ -1,3 +1,5 @@
-export function FilterPanel({ children }: { children: React.ReactNode }) {
-  return <aside className="reveal from-left space-y-4 rounded-xl border border-teal-700/25 bg-teal-100/70 p-4 shadow-sm">{children}</aside>;
+import { cn } from '@/lib/cn';
+
+export function FilterPanel({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <aside className={cn('space-y-4 rounded-xl border border-line bg-white p-5 shadow-sm lg:sticky lg:self-start', className)}>{children}</aside>;
 }

@@ -116,6 +116,7 @@ export function PracticeForm({ practice }: { practice?: Practice }) {
 
   return (
     <form className="space-y-6" onSubmit={form.handleSubmit(saveDraft)} noValidate>
+      <p className="rounded-2xl bg-white px-4 py-3 text-sm leading-6 text-navy-800">Three sections. Save a draft whenever you pause. Submit only when the required fields are complete. Buyers will not see a street address, and this form does not collect patient information.</p>
       <Card className="space-y-5">
         <h2 className="font-serif text-2xl text-navy-900">Practice</h2>
         <FieldGrid>

@@ -1,25 +1,29 @@
 import type { Metadata } from 'next';
-import { PageHeading } from '@/components/ui/page-heading';
 import { Marketplace } from '@/features/listings/marketplace';
 
 export const metadata: Metadata = { title: 'Practices' };
 
+const notes = [
+  { tone: 'bg-teal-100 text-navy-900', text: 'Only reviewed listings appear here.' },
+  { tone: 'bg-sand-100 text-navy-900', text: 'You see the city and region, not a street address.' },
+  { tone: 'bg-sky-100 text-navy-900', text: 'One active inquiry is enough to introduce yourself.' },
+];
+
 export default function PracticesPage() {
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:px-6">
-      <div className="rounded-3xl bg-gradient-to-br from-navy-900 via-coral-700 to-sky-700 px-6 py-10 text-white shadow-lg sm:px-10">
-        <PageHeading
-          tone="dark"
-          eyebrow="Marketplace"
-          title="Practices open for transition"
-          description="Every listing on this page has been approved. Drafts and pending submissions are not included."
-        />
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3">
-        <p className="reveal from-left rounded-2xl bg-teal-100 px-4 py-4 text-base leading-6 text-navy-900">Only reviewed listings appear here.</p>
-        <p className="reveal rounded-2xl bg-gold-100 px-4 py-4 text-base leading-6 text-navy-900" style={{ transitionDelay: '80ms' }}>You see the city and region, not a street address.</p>
-        <p className="reveal from-right rounded-2xl bg-coral-100 px-4 py-4 text-base leading-6 text-navy-900" style={{ transitionDelay: '160ms' }}>One active inquiry is enough to introduce yourself.</p>
-      </div>
+    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-6">
+      <header className="overflow-hidden rounded-2xl bg-navy-900 text-white shadow-sm">
+        <div className="px-6 py-8 sm:px-8">
+          <p className="text-xs font-semibold tracking-[0.16em] text-teal-100 uppercase">Marketplace</p>
+          <h1 className="mt-2 font-serif text-3xl leading-tight text-white sm:text-4xl">Practices open for transition</h1>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-sand-50">Every listing on this page has been approved. Drafts and pending submissions are not included.</p>
+        </div>
+      </header>
+      <ul className="grid gap-3 sm:grid-cols-3">
+        {notes.map((note) => (
+          <li key={note.text} className={`rounded-xl px-4 py-3 text-sm font-medium leading-6 ${note.tone}`}>{note.text}</li>
+        ))}
+      </ul>
       <Marketplace />
     </div>
   );

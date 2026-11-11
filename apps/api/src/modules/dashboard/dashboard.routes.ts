@@ -6,6 +6,7 @@ import { presentPractice } from '../practices/practice.presenter';
 import { Inquiry } from '../inquiries/inquiry.model';
 import { presentInquiry } from '../inquiries/inquiry.service';
 import { User } from '../users/user.model';
+import { SavedPractice } from '../deals/deal.models';
 
 export const dashboardRouter = Router();
 
@@ -44,12 +45,13 @@ dashboardRouter.get(
     }
 
     if (user.role === 'BUYER') {
-      const [availableListings, inquiries, openInquiries, acknowledgedInquiries, closedInquiries, recent] = await Promise.all([
+      const [availableListings, inquiries, openInquiries, acknowledgedInquiries, closedInquiries, savedPractices, recent] = await Promise.all([
         Practice.countDocuments({ status: 'APPROVED' }),
         Inquiry.countDocuments({ buyerId: userId }),
         Inquiry.countDocuments({ buyerId: userId, status: 'OPEN' }),
         Inquiry.countDocuments({ buyerId: userId, status: 'ACKNOWLEDGED' }),
         Inquiry.countDocuments({ buyerId: userId, status: 'CLOSED' }),
+        SavedPractice.countDocuments({ buyerId: userId }),
         Inquiry.find({ buyerId: userId })
           .sort({ createdAt: -1 })
           .limit(5)
@@ -65,6 +67,7 @@ dashboardRouter.get(
           openInquiries,
           acknowledgedInquiries,
           closedInquiries,
+          savedPractices,
           recentInquiries: recent.map((inquiry) => presentInquiry(inquiry, 'buyer')),
         },
       });

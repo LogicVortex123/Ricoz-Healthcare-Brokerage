@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PageHeading } from '@/components/ui/page-heading';
+import { DealRoom } from '@/features/deals/deal-room';
 import { AdminListingReview } from '@/features/admin/admin-views';
 
 export const metadata: Metadata = { title: 'Review listing' };
@@ -10,6 +11,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     <div className="space-y-6">
       <PageHeading eyebrow="Administration" title="Review listing" description="Approval makes the listing visible to buyers. Rejection keeps it private and shows the seller your reason." />
       <AdminListingReview id={id} />
+      <DealRoom practiceId={id} />
     </div>
   );
 }

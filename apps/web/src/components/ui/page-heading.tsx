@@ -16,11 +16,11 @@ export function PageHeading({
 }) {
   const dark = tone === 'dark';
   return (
-    <div className="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="reveal flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        {eyebrow ? <p className={`text-sm font-semibold tracking-wide uppercase ${dark ? 'text-teal-100' : 'text-teal-800'}`}>{eyebrow}</p> : null}
-        <h1 className={`mt-2 font-serif text-4xl sm:text-5xl ${dark ? 'text-white' : 'text-navy-900'}`}>{title}</h1>
-        {description ? <p className={`mt-3 max-w-2xl text-base leading-7 ${dark ? 'text-sand-100' : 'text-muted'}`}>{description}</p> : null}
+        {eyebrow ? <p className={`text-xs font-semibold tracking-wide uppercase ${dark ? 'text-teal-100' : 'text-teal-800'}`}>{eyebrow}</p> : null}
+        <h1 className={`mt-1 font-serif text-3xl leading-tight sm:text-4xl ${dark ? 'text-white' : 'text-navy-900'}`}>{title}</h1>
+        {description ? <p className={`mt-2 max-w-2xl text-sm leading-6 ${dark ? 'text-sand-100' : 'text-muted'}`}>{description}</p> : null}
       </div>
       {action}
     </div>

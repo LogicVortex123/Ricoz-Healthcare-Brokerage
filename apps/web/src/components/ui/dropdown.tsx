@@ -46,7 +46,7 @@ export function Dropdown({
         <div
           role="menu"
           className={cn(
-            'motion-pop absolute z-30 mt-2 min-w-64 rounded-2xl border border-line bg-white p-2 shadow-xl',
+            'motion-pop absolute z-30 mt-2 min-w-64 rounded-xl border border-line bg-white p-2 shadow-md',
             align === 'right' ? 'right-0' : 'left-0',
           )}
           onClick={() => setOpen(false)}

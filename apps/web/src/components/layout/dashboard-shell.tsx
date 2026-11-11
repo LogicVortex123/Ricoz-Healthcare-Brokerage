@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Building2, ClipboardList, Compass, LayoutDashboard, LogOut, Menu, Plus, UserRound, Users, X } from 'lucide-react';
+import { Bookmark, Building2, ClipboardList, Compass, LayoutDashboard, LogOut, Menu, Plus, UserRound, Users, X } from 'lucide-react';
 import { Logo } from '@/components/brand/logo';
+import { RouteLoading } from '@/components/ui/route-loading';
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import { useToast } from '@/components/ui/toast';
 import { useAuth } from '@/features/auth/auth-provider';
@@ -25,6 +26,7 @@ const navigation: Record<Role, Item[]> = {
   BUYER: [
     { href: '/dashboard/buyer', label: 'Overview', icon: LayoutDashboard, match: (pathname) => pathname === '/dashboard/buyer' },
     { href: '/dashboard/buyer/explore', label: 'Explore practices', icon: Compass, match: (pathname) => pathname.startsWith('/dashboard/buyer/explore') },
+    { href: '/dashboard/buyer/saved', label: 'Saved practices', icon: Bookmark, match: (pathname) => pathname.startsWith('/dashboard/buyer/saved') },
     { href: '/dashboard/buyer/inquiries', label: 'My inquiries', icon: ClipboardList, match: (pathname) => pathname.startsWith('/dashboard/buyer/inquiries') },
     { href: '/dashboard/buyer/profile', label: 'Profile', icon: UserRound, match: (pathname) => pathname.startsWith('/dashboard/buyer/profile') },
   ],
@@ -36,8 +38,8 @@ const navigation: Record<Role, Item[]> = {
     { href: '/dashboard/admin/inquiries', label: 'Inquiries', icon: ClipboardList, match: (pathname) => pathname.startsWith('/dashboard/admin/inquiries') },
   ],
   BROKER: [
-    { href: '/dashboard/broker', label: 'Overview', icon: LayoutDashboard, match: (pathname) => pathname === '/dashboard/broker' },
-    { href: '/practices', label: 'Approved practices', icon: Compass, match: (pathname) => pathname.startsWith('/practices') },
+    { href: '/dashboard/broker', label: 'Assigned practices', icon: Building2, match: (pathname) => pathname.startsWith('/dashboard/broker') },
+    { href: '/practices', label: 'Marketplace', icon: Compass, match: (pathname) => pathname.startsWith('/practices') },
   ],
 };
 
@@ -75,7 +77,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   if (status !== 'ready' || !user) {
-    return <div className="grid min-h-screen place-items-center text-sm text-muted">Loading your workspace…</div>;
+    return <RouteLoading title="Loading your workspace" />;
   }
 
   const items = navigation[user.role];
@@ -94,7 +96,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={cn('flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold transition duration-200 hover:translate-x-1', active ? 'bg-white/10 text-white' : 'text-sand-200 hover:bg-white/5 hover:text-white')}
+              className={cn('flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium', active ? 'bg-white text-navy-950' : 'text-sand-200 hover:bg-white/10 hover:text-white')}
             >
               <Icon className="h-4 w-4" />
               {item.label}
@@ -110,8 +112,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(165deg,#fff7ea_0%,#e7f4f3_42%,#fde8e6_100%)] lg:grid lg:grid-cols-[260px_1fr]">
-      <aside className="hidden lg:block">{sidebar}</aside>
+    <div className="min-h-screen lg:grid lg:grid-cols-[240px_1fr]">
+      <aside className="hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto">{sidebar}</aside>
       {open ? (
         <div className="fixed inset-0 z-40 lg:hidden">
           <button className="absolute inset-0 bg-navy-950/50" aria-label="Close navigation" onClick={() => setOpen(false)} />
@@ -119,22 +121,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       ) : null}
       <div className="min-w-0">
-        <header className="border-b border-line bg-white shadow-sm">
-          <div className="h-1.5 bg-gradient-to-r from-teal-700 via-gold-700 to-coral-700" />
-          <div className="flex h-[4.25rem] items-center justify-between gap-3 px-4 sm:px-6">
+        <header className="border-b border-line bg-white">
+          <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
             <div className="flex items-center gap-3">
               <button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-line lg:hidden" aria-label="Open navigation" onClick={() => setOpen(true)}>
                 {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
               <div>
                 <p className="text-xs font-semibold tracking-wide text-teal-800 uppercase">{user.role === 'ADMIN' ? 'Administration' : user.role === 'BROKER' ? 'Broker' : user.role === 'BUYER' ? 'Buyer' : 'Seller'}</p>
-                <p className="hidden text-base font-semibold text-navy-900 sm:block">Healthcare practice transitions</p>
+                <p className="hidden text-base font-semibold text-navy-900 sm:block">{user.name}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button type="button" className="inline-flex h-10 items-center gap-2 rounded-full border border-coral-100 bg-coral-100 px-3 text-sm font-semibold text-coral-700 transition hover:-translate-y-0.5 hover:bg-coral-700 hover:text-white" onClick={() => void signOut()}>
-                <LogOut className="h-4 w-4" /> Sign out
-              </button>
               <Dropdown
                 label={
                   <span className="account-chip inline-flex items-center gap-2 rounded-full border border-line bg-sand-50 py-1 pr-2 pl-1">
